@@ -92,6 +92,7 @@ type Record struct {
     Text string
     Marriages []*Marriage
     Parents [2]*Parent
+    Children []*Child
     BirthDate *DatedEvent
     Census *DatedEvent
     Death *DatedEvent
@@ -104,6 +105,11 @@ type Record struct {
     curMarriageIdx int
 }
 
+func NewRecord() *Record {
+    rec := new(Record)
+    rec.Children = make([]*Child, 0)
+    return rec
+}
 type Document struct {
     Paragraphs []*Paragraph
 }
@@ -443,12 +449,62 @@ func ProcessParents(s *Sentence, rec *Record) {
     }
 }
 
+func ProcessChildren(s *Sentence, rec *Record) {
+    for _, f := range(s.Frags) {
+        if f.RefId != "" {
+            fmt.Printf("Child: `%s`\n", f.Data)
+            c := &Child { Identifier : f.RefId, Name : f.Data }
+            rec.Children = append(rec.Children, c)
+        }
+    }
+}
+
+//func ProcessMarriage(s *Sentence, rec *Record) {
+//    for _, f := range(s.Frags) {
+//        if f.RefId != "" {
+//            fmt.Printf("Married to: `%s`\n", f.Data)
+//            m := &Marriage { OtherIdentifier : f.RefId, OtherName : f.Data }
+//            rec.Marriages = append(rec.Marriages, m)
+//            break
+//        }
+//    }
+//
+//    for _, f := range(s.Frags) {
+//
+//    }
+//}
+
+func ProcessCensus(s *Sentence, rec *Record) {
+
+}
+
+func ProcessOccupation(s *Sentence, rec *Record) {
+}
+
+func ProcessAlias(s *Sentence, rec *Record) {
+}
+
+func ProcessBurial(s *Sentence, rec *Record) {
+}
+
+func ProcessDeath(s *Sentence, rec *Record) {
+}
+
+func ProcessMarriageBond(s *Sentence, rec *Record) {
+}
+
+func ProcessResidence(s *Sentence, rec *Record) {
+}
+
+func ProcessDescription(s *Sentence, rec *Record) {
+}
+
 func GenerateRecords(doc *Document) []*Record {
 
     records := make([]*Record, 0)
 
     for _, p := range(doc.Paragraphs) {
-        rec := new(Record)
+        rec := NewRecord()
 
         for _, s := range(p.Sentences) {
 
@@ -459,9 +515,9 @@ func GenerateRecords(doc *Document) []*Record {
             } else if s.Contains("Parents:") {
                 ProcessParents(s, rec)
             } else if s.Contains("Children were:") {
-                //ProcessChildren(s, rec)
+                ProcessChildren(s, rec)
             } else if s.Contains("was married to") {
-                //ProcessMarriage(s, rec)
+                ProcessMarriage(s, rec)
             } else if s.Contains("was a") {
                 //ProcessOccupation(s, rec)
             } else if s.Contains("also known as") {
@@ -684,4 +740,6 @@ func main() {
         //records := GenerateRecords(procDoc)
         GenerateRecords(procDoc)
     }
+
+    // TODO: need a second pass to associate children with a marriage
 }
