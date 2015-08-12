@@ -459,20 +459,20 @@ func ProcessChildren(s *Sentence, rec *Record) {
     }
 }
 
-//func ProcessMarriage(s *Sentence, rec *Record) {
-//    for _, f := range(s.Frags) {
-//        if f.RefId != "" {
-//            fmt.Printf("Married to: `%s`\n", f.Data)
-//            m := &Marriage { OtherIdentifier : f.RefId, OtherName : f.Data }
-//            rec.Marriages = append(rec.Marriages, m)
-//            break
-//        }
-//    }
-//
-//    for _, f := range(s.Frags) {
-//
-//    }
-//}
+func ProcessMarriage(s *Sentence, rec *Record) {
+    for _, f := range(s.Frags) {
+        if f.RefId != "" {
+            fmt.Printf("Married to: `%s`\n", f.Data)
+            m := &Marriage { OtherIdentifier : f.RefId, OtherName : f.Data }
+            rec.Marriages = append(rec.Marriages, m)
+            break
+        }
+    }
+
+    //for _, f := range(s.Frags) {
+
+    //}
+}
 
 func ProcessCensus(s *Sentence, rec *Record) {
 
